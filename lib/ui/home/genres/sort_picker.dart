@@ -8,8 +8,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
  class SortPicker extends ConsumerStatefulWidget {
   final OnSortSelected onSortSelected;
+  final bool useSliver;
 
-  const SortPicker({required this.onSortSelected,super.key});
+  const SortPicker( {required this.useSliver,required this.onSortSelected,super.key});
 
 
   @override
@@ -22,6 +23,15 @@ class _SortPickerState extends ConsumerState<SortPicker> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.useSliver) {
+      return SliverToBoxAdapter(
+          child: buildRow()
+      );
+    } else {
+      return buildRow();
+    }
+  }
+  Widget buildRow() {
     return Row(
       children: [
         Spacer(),

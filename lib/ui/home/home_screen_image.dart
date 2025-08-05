@@ -1,5 +1,6 @@
 
 import 'package:br_movies/providers.dart';
+import 'package:br_movies/utils/utils.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,8 +11,8 @@ const animationTime = 1000;
 
 
 class HomeScreenImage extends ConsumerWidget {
-  const HomeScreenImage({super.key});
-
+  final OnMovieTap onMovieTap;
+  const HomeScreenImage({super.key, required this.onMovieTap});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,13 +30,18 @@ class HomeScreenImage extends ConsumerWidget {
         itemCount: images.length,
         itemBuilder: (BuildContext context, int index) {
       // 5
-      return CachedNetworkImage(
-        imageUrl: images[index],
-        alignment: Alignment.topCenter,
-        fit: BoxFit.fitHeight,
-        height: 232,
-        width: screenWidth,
+      return GestureDetector(
+        onTap: () {
+          onMovieTap(1);
+        },
+        child: CachedNetworkImage(
+          imageUrl: images[index],
+          alignment: Alignment.topCenter,
+          fit: BoxFit.fitHeight,
+          height: 232,
+          width: screenWidth,
 
+        ),
       );
         },
       ),

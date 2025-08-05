@@ -1,23 +1,28 @@
-import 'package:br_movies/providers.dart';
-import 'package:br_movies/ui/home/genres/genre_search_row.dart';
-import 'package:br_movies/ui/home/genres/genre_section.dart';
+
+
+import 'package:auto_route/annotations.dart';
 import 'package:br_movies/ui/home/genres/sort_picker.dart';
-import 'package:br_movies/ui/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../providers.dart';
+import '../../theme/theme.dart';
+import '../../widgets/sliver_divider.dart';
 import '../../widgets/vert_movie_list.dart';
+import 'genre_search_row.dart';
+import 'genre_section.dart';
+@RoutePage(name: 'GenreRoute')
 
-class GenreScreen extends ConsumerStatefulWidget{
+class GenreScreen extends ConsumerStatefulWidget {
   const GenreScreen({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _GenreScreenState();
+  ConsumerState<GenreScreen> createState() => _GenreScreenState();
 }
 
-class _GenreScreenState extends ConsumerState<GenreScreen>{
-  final expandedNotifier = ValueNotifier<bool>(false);
+class _GenreScreenState extends ConsumerState<GenreScreen> {
   List<GenreState> genres = [];
+  final expandedNotifier = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -41,43 +46,62 @@ class _GenreScreenState extends ConsumerState<GenreScreen>{
       GenreState(genre: 'Animation', isSelected: false),
       GenreState(genre: 'Documentation', isSelected: false),
       GenreState(genre: 'TV Movie', isSelected: false),
+      GenreState(genre: 'Fantasy', isSelected: false),
     ];
-   
   }
+
   @override
-  Widget build(BuildContext context, ) {
-   return SafeArea(child: Column(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.start,            crossAxisAlignment: CrossAxisAlignment.start,
-
-     children: [Row(mainAxisSize: MainAxisSize.max,
-     children: [
-       Padding(
-         padding: const EdgeInsets.fromLTRB(16,16.0,0,24),
-         child: Text('Find a Movie',style: largeTitle),
-       ),
-     ],
-   ),
-   GenreSearchRow((searchString){}),
-     ValueListenableBuilder<bool>(
-         valueListenable: expandedNotifier,
-         builder: (BuildContext context, bool value, Widget? child) {
-           return GenreSection(
-             genreStates: genres,
-             isExpanded: value,
-             onGenresExpanded: (expanded) {
-               expandedNotifier.value = expanded;
-             },
-             onGenresSelected: (List<GenreState> states) { },
-           );
-         }),
-       const Divider(),
-       SortPicker(onSortSelected : (sorting){}),
-       VerticalMovieList(movies: [], onMovieTap: (movieId) {})
-
-
-      
-
-    ], )
-   );
+  Widget build(BuildContext context) {
+    final images = ref.read(movieImagesProvider);
+    return SafeArea(
+      child: Container(
+        color: screenBackground,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: CustomScrollView(
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        Padding(
+                          padding:
+                          const EdgeInsets.fromLTRB(16, 16.0, 0.0, 24.0),
+                          child: Text('Find a Movie',
+                              style: Theme.of(context).textTheme.titleLarge),
+                        ),
+                        GenreSearchRow((searchString) {}),
+                      ],
+                    ),
+                  ),
+                  ValueListenableBuilder<bool>(
+                      valueListenable: expandedNotifier,
+                      builder:
+                          (BuildContext context, bool value, Widget? child) {
+                        return GenreSection(
+                          genreStates: genres,
+                          isExpanded: value,
+                          onGenresExpanded: (expanded) {
+                            expandedNotifier.value = expanded;
+                          },
+                          onGenresSelected: (List<GenreState> states) {},
+                        );
+                      }),
+                  const SliverDivider(),
+                  SortPicker(useSliver: true, onSortSelected: (sorting) {}),
+                  VerticalMovieList(
+                    movies: images,
+                    onMovieTap: (movieId) {},
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
-

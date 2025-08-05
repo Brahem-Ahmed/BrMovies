@@ -1,7 +1,9 @@
-import 'package:br_movies/ui/home/genres/genre_screen.dart';
-import 'package:br_movies/ui/home/home_screen.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:br_movies/ui/router/app_routes.dart';
+import 'package:br_movies/ui/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
+@RoutePage()
 
 class MainScreen extends StatefulWidget{
   const MainScreen ({super.key});
@@ -11,29 +13,34 @@ class MainScreen extends StatefulWidget{
 
 
 class _MainScreenState extends State<MainScreen> {
-  var index =0 ;
-  final List<Widget> screens = <Widget>[];
-  @override
-  void initState() {
-    super.initState();
-    screens.add(HomeScreen());
-    screens.add(GenreScreen());
-    screens.add(Placeholder());
-  }
+
   @override
   Widget build(BuildContext context) {
-        return Scaffold(body: screens[index],
-                        bottomNavigationBar: BottomNavigationBar(items: const [
-                          BottomNavigationBarItem(icon: Icon(Icons.home),label: 'Home'),
-                          BottomNavigationBarItem(icon: Icon(Symbols.genres),label: 'Genre'),
-                          BottomNavigationBarItem(icon: Icon(Icons.favorite), label :'Favorites'),
-                          ],
-                        currentIndex: index,
-                        onTap: (navIndex){
-                          setState(() {
-                            index = navIndex;
-                          });
-                        },),
-        )   ;
+    return AutoTabsScaffold(
+      backgroundColor: screenBackground,
+      routes: [
+        HomeRoute(),
+        GenreRoute(),
+        FavoriteRoute(),
+
+      ],
+      bottomNavigationBuilder: (_, tabsRouter) => buildBottomBar(tabsRouter),
+    );
+  }
+
+  Widget buildBottomBar(TabsRouter tabsRouter) {
+    return NavigationBar(
+      destinations: const [
+        NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+        NavigationDestination(icon: Icon(Symbols.genres), label: 'Genre'),
+        NavigationDestination(icon: Icon(Icons.favorite), label: 'Favorites'),
+      ],
+      selectedIndex: tabsRouter.activeIndex,
+      onDestinationSelected: (navIndex) {
+        setState(() {
+          tabsRouter.setActiveIndex(navIndex);
+        });
+      },
+    );
   }
 }

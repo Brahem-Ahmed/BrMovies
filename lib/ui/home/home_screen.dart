@@ -1,8 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:br_movies/ui/home/home_screen_image.dart';
 import 'package:br_movies/ui/home/horiz_movies.dart';
 import 'package:br_movies/ui/home/title_row.dart';
 import 'package:flutter/material.dart';
 
+import '../router/app_routes.dart';
+@RoutePage(name: 'HomeRoute')
 class HomeScreen extends StatefulWidget{
   const HomeScreen({super.key});
 
@@ -16,13 +19,16 @@ class _HomeScreenState  extends State<HomeScreen> {
   Widget build(BuildContext context) {
   return SafeArea(
     child: Scaffold(
-      body: Column(children: [Align( alignment: Alignment.center,
+      body: ListView(
+        children: [Align( alignment: Alignment.center,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(0,16.0,0,20 ),
-            child: Text('Essabr w Barra'),
+            child: Text('BrMovies'),
           ))
-        ,HomeScreenImage()
-        ,TitleRow(text: 'Trending', onMoreClicked: (){}),
+        ,HomeScreenImage(onMovieTap: (id) {
+      context.router.push(MovieDetailRoute(movieId: id));})
+        ,
+        TitleRow(text: 'Trending', onMoreClicked: (){}),
         HorizontalMovies()
         ,TitleRow(text: 'Trending', onMoreClicked: (){}),HorizontalMovies()
       ],

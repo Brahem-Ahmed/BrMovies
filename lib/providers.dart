@@ -1,6 +1,9 @@
+import 'package:br_movies/ui/home/genres/genre_section.dart';
+import 'package:br_movies/ui/router/app_routes.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import
 'package:riverpod_annotation/riverpod_annotation.dart';
+
 part 'providers.g.dart';
 @riverpod
 List<String> movieImages(Ref ref) => ['https://image.tmdb.org/t/p/w500/AEgggzRr1vZCLY86MAp93li43z.jpg',
@@ -23,3 +26,29 @@ List<String> movieImages(Ref ref) => ['https://image.tmdb.org/t/p/w500/AEgggzRr1
   'https://image.tmdb.org/t/p/w500/4CkZl1LK6a5rXBqJB2ZP77h3N5i.jpg',
   'https://image.tmdb.org/t/p/w500/jwMwRucnAROgWo9WLLmIqzHmmzi.jpg',
   'https://image.tmdb.org/t/p/w500/vTX9CxFNEQOlfXsgqec7xmc5UtD.jpg'];
+@riverpod
+List<GenreState> genres(Ref ref) =>  [
+  GenreState(genre: 'Action', isSelected: false),
+  GenreState(genre: 'Adventure', isSelected: false),
+  GenreState(genre: 'Crime', isSelected: false),
+  GenreState(genre: 'Mystery', isSelected: false),
+  GenreState(genre: 'War', isSelected: false),
+  GenreState(genre: 'Comedy', isSelected: false),
+  GenreState(genre: 'Romance', isSelected: false),
+  GenreState(genre: 'History', isSelected: false),
+  GenreState(genre: 'Music', isSelected: false),
+  GenreState(genre: 'Drama', isSelected: false),
+  GenreState(genre: 'Thriller', isSelected: false),
+  GenreState(genre: 'Family', isSelected: false),
+  GenreState(genre: 'Horror', isSelected: false),
+  GenreState(genre: 'Western', isSelected: false),
+  GenreState(genre: 'Science Fiction', isSelected: false),
+  GenreState(genre: 'Animation', isSelected: false),
+  GenreState(genre: 'Documentation', isSelected: false),
+  GenreState(genre: 'TV Movie', isSelected: false),
+  GenreState(genre: 'Fantasy', isSelected: false),
+];
+
+@Riverpod(keepAlive: true)
+AppRouter appRouter(Ref ref) =>
+    AppRouter();

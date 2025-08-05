@@ -18,7 +18,7 @@ class TitleRow extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16,16.0,0.0,8),
                     child: TextButton(onPressed: onMoreClicked,
-                        child: Text('More',style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),)),
+                         child: Text('More',style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),)),
                   )
                 ],
 
