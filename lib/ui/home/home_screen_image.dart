@@ -16,7 +16,9 @@ class HomeScreenImage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final images = ref.watch(movieImagesProvider);
+    final movies = ref.watch(movieImagesProvider);
+    final heroTag = ref.watch(heroTagProvider);
+
     //1
     final screenWidth = MediaQuery.of(context).size.width -32;
     //2
@@ -27,20 +29,24 @@ class HomeScreenImage extends ConsumerWidget {
         duration: animationTime,
         autoplay: true,
         //4
-        itemCount: images.length,
+        itemCount: movies.length,
         itemBuilder: (BuildContext context, int index) {
       // 5
       return GestureDetector(
         onTap: () {
-          onMovieTap(1);
+          ref.read(heroTagProvider.notifier).state = '${movies[index]}swiper';
+          onMovieTap(index);
         },
-        child: CachedNetworkImage(
-          imageUrl: images[index],
-          alignment: Alignment.topCenter,
-          fit: BoxFit.fitHeight,
-          height: 232,
-          width: screenWidth,
+        child: Hero(
+          tag: '${movies[index]}swiper',
+          child: CachedNetworkImage(
+            imageUrl: movies[index],
+            alignment: Alignment.topCenter,
+            fit: BoxFit.fitHeight,
+            height: 232,
+            width: screenWidth,
 
+          ),
         ),
       );
         },

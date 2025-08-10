@@ -1,10 +1,16 @@
 import 'package:br_movies/providers.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../utils/utils.dart';
+import '../widgets/movie_widget.dart';
+
 class HorizontalMovies extends ConsumerWidget{
-  const HorizontalMovies({super.key});
+  final MovieType movieType;
+  final OnMovieTap onMovieTap;
+  final List<String> movies;
+
+  const HorizontalMovies({super.key, required this.movieType, required this.onMovieTap, required this.movies});
 
   @override
   Widget build(BuildContext context,WidgetRef ref)  {
@@ -15,18 +21,10 @@ class HorizontalMovies extends ConsumerWidget{
               scrollDirection: Axis.horizontal,
               itemCount: movies.length,
               itemBuilder: (context, index){
-                return GestureDetector(
-                  onTap: (){},
-                  child: SizedBox(
-                    width: 100,
-                    height: 162,
-                    child: CachedNetworkImage(imageUrl: movies[index],
-                    alignment: Alignment.topCenter,
-                    fit: BoxFit.fitWidth,
-                      width: 100,
-                      height: 122 ,),
-                  ),
-                );
+                return MovieWidget(movieId: index,
+                  movieUrl: movies[index],
+                  onMovieTap: onMovieTap,
+                  movieType: movieType,);
               }
 
             )

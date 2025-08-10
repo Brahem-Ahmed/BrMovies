@@ -6,7 +6,7 @@ import '../../widgets/text_icon.dart';
 
 typedef OnFavoriteSelected = void Function();
 
-class ButtonRow extends StatelessWidget {
+class ButtonRow extends StatefulWidget {
   final bool favoriteSelected;
   final OnFavoriteSelected onFavoriteSelected;
 
@@ -16,6 +16,50 @@ class ButtonRow extends StatelessWidget {
     required this.onFavoriteSelected,
   });
 
+  @override
+  State<ButtonRow> createState() => _ButtonRowState();
+}
+
+class _ButtonRowState extends State<ButtonRow> with TickerProviderStateMixin{
+  late AnimationController _sizeController;
+  late Animation<double> _sizeAnimation;
+  late AnimationController _colorController;
+  late Animation<Color?> _colorAnimation;
+  @override
+  void initState() {
+    super.initState();
+// 1
+    _sizeController = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: 1), // Adjust pulseduration
+    )..repeat(reverse: true); // Make animation repeat
+// 2
+    _sizeAnimation = Tween<double>(
+      begin: 1.0, // Original size
+      end: 1.5, // Scaled-up size
+    ).animate(
+      CurvedAnimation(parent: _sizeController, curve:
+      Curves.easeInOut),
+    );
+    _colorController = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: 1), // Adjust color change duration
+    )..repeat(reverse: true);
+// 4
+    _colorAnimation = ColorTween(
+      begin: Colors.white, // Starting color
+      end: Colors.red, // Ending color
+    ).animate(
+      CurvedAnimation(parent: _colorController, curve:
+      Curves.easeInOut),
+    );
+  }
+  @override
+  void dispose() {
+    _sizeController.dispose();
+    _colorController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -31,11 +75,11 @@ class ButtonRow extends StatelessWidget {
             ),
             icon: IconButton(
               onPressed: () {
-                onFavoriteSelected();
+                widget.onFavoriteSelected();
               },
               icon: Icon(
-                favoriteSelected ? Icons.favorite_outlined : Icons.favorite_border,
-                color: favoriteSelected ? Colors.red : Colors.white,
+                widget.favoriteSelected ? Icons.favorite_outlined : Icons.favorite_border,
+                color: widget.favoriteSelected ? Colors.red : Colors.white,
               ),
             ),
           ),
@@ -74,3 +118,4 @@ class ButtonRow extends StatelessWidget {
     );
   }
 }
+

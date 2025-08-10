@@ -22,7 +22,7 @@ final movieImagesProvider = AutoDisposeProvider<List<String>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef MovieImagesRef = AutoDisposeProviderRef<List<String>>;
-String _$genresHash() => r'1e0fe8758feb6b8b68ad99ceb1486e97bfc776d6';
+String _$genresHash() => r'abc71f2e13e51418775b36be8d1d6d88814cb3f3';
 
 /// See also [genres].
 @ProviderFor(genres)

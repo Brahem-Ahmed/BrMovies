@@ -25,11 +25,13 @@ class VerticalMovieList extends ConsumerWidget {
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(
+        childCount: movies.length,
             (context, index) => MovieRow(
-          movie: movies[index],
+          movieId: index,
+              movieUrl: movies[index],
+              onMovieTap: onMovieTap,
 
         ),
-        childCount: movies.length,
       ),
     );
   }

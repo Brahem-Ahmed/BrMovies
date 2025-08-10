@@ -1,11 +1,12 @@
 
 
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:br_movies/ui/home/genres/sort_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../providers.dart';
+import '../../router/app_routes.dart';
 import '../../theme/theme.dart';
 import '../../widgets/sliver_divider.dart';
 import '../../widgets/vert_movie_list.dart';
@@ -94,7 +95,7 @@ class _GenreScreenState extends ConsumerState<GenreScreen> {
                   SortPicker(useSliver: true, onSortSelected: (sorting) {}),
                   VerticalMovieList(
                     movies: images,
-                    onMovieTap: (movieId) {},
+                    onMovieTap: (movieId) {context.router.push(MovieDetailRoute(movieId: movieId));},
                   ),
                 ],
               ),

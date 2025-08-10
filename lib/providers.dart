@@ -49,6 +49,10 @@ List<GenreState> genres(Ref ref) =>  [
   GenreState(genre: 'Fantasy', isSelected: false),
 ];
 
+final heroTagProvider = StateProvider<String>((ref) {
+  return '';
+});
+
 @Riverpod(keepAlive: true)
 AppRouter appRouter(Ref ref) =>
     AppRouter();

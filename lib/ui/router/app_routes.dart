@@ -18,8 +18,9 @@ class AppRouter extends _$AppRouter {
       AutoRoute(path: 'Genre', page: GenreRoute.page),
       AutoRoute(path: 'favorites', page: FavoriteRoute.page),
     ]),
-    AutoRoute(path:'/details/:movieId', page: MovieDetailRoute.page, maintainState: false),
-    AutoRoute(page: VideoPageRoute.page, maintainState: false),
+   CustomRoute(page: MovieDetailRoute.page, maintainState: false, transitionsBuilder: TransitionsBuilders.slideBottom, durationInMilliseconds: 500,),
+   CustomRoute(page: VideoPageRoute.page, maintainState: false, transitionsBuilder: TransitionsBuilders.slideRight, durationInMilliseconds: 500,),
+
 
   ];
 }

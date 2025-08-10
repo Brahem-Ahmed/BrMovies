@@ -29,6 +29,7 @@ class _MovieDetailState extends ConsumerState<MovieDetail> {
   @override
   Widget build(BuildContext context) {
     final genres = ref.read(genresProvider);
+    final movies = ref.read(movieImagesProvider);
 
     return SafeArea(
       child: Scaffold(
@@ -53,7 +54,7 @@ class _MovieDetailState extends ConsumerState<MovieDetail> {
                 child: CustomScrollView(slivers: [
                   SliverList(
                     delegate: SliverChildListDelegate([
-                      Stack(children: [DetailImage()]),
+                      Stack(children: [DetailImage(movieUrl: movies[widget.movieId])]),
                       GenreRow(genres: genres),
                       const MovieOverview(
                           details:
