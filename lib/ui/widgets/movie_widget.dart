@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
+import '../../data/models/movie.dart';
 import '../../providers.dart';
 import '../../utils/utils.dart';
 enum MovieType {
@@ -14,14 +15,12 @@ enum MovieType {
 }
 
 class MovieWidget extends ConsumerStatefulWidget {
-  final int movieId;
-  final String movieUrl;
+  final Movie movie;
   final OnMovieTap onMovieTap;
   final MovieType movieType;
 
   const MovieWidget(
-      {required this.movieId,
-        required this.movieUrl,
+      { required this.movie,
         required this.onMovieTap,
         required this.movieType,
         super.key});
@@ -42,7 +41,7 @@ class _MovieWidgetState extends ConsumerState<MovieWidget>
   @override
   void initState() {
     super.initState();
-    uniqueHeroTag = widget.movieUrl + widget.movieType.name;
+    uniqueHeroTag = widget.movie.image + widget.movieType.name;
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _controller.reset();
@@ -69,7 +68,7 @@ class _MovieWidgetState extends ConsumerState<MovieWidget>
           child: Hero(
             tag: uniqueHeroTag,
             child: CachedNetworkImage(
-              imageUrl: widget.movieUrl,
+              imageUrl: widget.movie.image,
               alignment: Alignment.topCenter,
               fit: BoxFit.fitHeight,
               height: 100,
@@ -81,7 +80,7 @@ class _MovieWidgetState extends ConsumerState<MovieWidget>
                 onComplete: (controller) {
                   if (animateImage) {
                     animateImage = false;
-                    widget.onMovieTap(widget.movieId);
+                    widget.onMovieTap(widget.movie.movieId);
                   }
                 })
                 .scaleXY(begin: 1.0, end: 1.1, duration: 600.ms)

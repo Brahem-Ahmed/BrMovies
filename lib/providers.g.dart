@@ -6,38 +6,23 @@ part of 'providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$movieImagesHash() => r'ca5e5142e9f58125209dfad317bd0539dc62d675';
+String _$movieViewModelHash() => r'0d3337a89171d3592e490518cf9a99861276ac7b';
 
-/// See also [movieImages].
-@ProviderFor(movieImages)
-final movieImagesProvider = AutoDisposeProvider<List<String>>.internal(
-  movieImages,
-  name: r'movieImagesProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$movieImagesHash,
+/// See also [movieViewModel].
+@ProviderFor(movieViewModel)
+final movieViewModelProvider = FutureProvider<MovieViewModel>.internal(
+  movieViewModel,
+  name: r'movieViewModelProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$movieViewModelHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef MovieImagesRef = AutoDisposeProviderRef<List<String>>;
-String _$genresHash() => r'abc71f2e13e51418775b36be8d1d6d88814cb3f3';
-
-/// See also [genres].
-@ProviderFor(genres)
-final genresProvider = AutoDisposeProvider<List<GenreState>>.internal(
-  genres,
-  name: r'genresProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$genresHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef GenresRef = AutoDisposeProviderRef<List<GenreState>>;
+typedef MovieViewModelRef = FutureProviderRef<MovieViewModel>;
 String _$appRouterHash() => r'fc1228daa214cc1ad475cfdeafc6db36a6a237b5';
 
 /// See also [appRouter].

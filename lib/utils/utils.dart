@@ -1,3 +1,4 @@
+import 'package:br_movies/data/models/favorite.dart';
 import 'package:flutter/material.dart';
 
 Widget addVerticalSpace(double amount){
@@ -19,5 +20,5 @@ String youtubeUrlFromId(String videoId) {
 }
 typedef OnMovieTap = void Function(int movieId);
 typedef OnMovieVideoTap = void Function(String video);
-
+typedef OnFavoriteResultsTap = void Function(Favorite favorite);
 

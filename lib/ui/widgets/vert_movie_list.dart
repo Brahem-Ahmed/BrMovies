@@ -2,11 +2,13 @@ import 'package:br_movies/ui/widgets/movie_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../data/models/movie.dart';
+
 typedef OnMovieTap = void Function(int movieId);
 
 class VerticalMovieList extends ConsumerWidget {
   final OnMovieTap onMovieTap;
-  final  List<String> movies; // Changed from dynamic to explicit type
+  final  List<Movie> movies; // Changed from dynamic to explicit type
 
   const VerticalMovieList({
     super.key,
@@ -28,7 +30,7 @@ class VerticalMovieList extends ConsumerWidget {
         childCount: movies.length,
             (context, index) => MovieRow(
           movieId: index,
-              movieUrl: movies[index],
+              movieUrl: movies.elementAt(index).image,
               onMovieTap: onMovieTap,
 
         ),

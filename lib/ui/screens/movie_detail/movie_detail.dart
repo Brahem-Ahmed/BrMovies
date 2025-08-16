@@ -1,17 +1,21 @@
+
 import 'package:auto_route/auto_route.dart';
+import 'package:br_movies/ui/screens/movie_detail/trailer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../data/models/movie.dart';
 import '../../../providers.dart';
+import '../../movie_viewmodel.dart';
 import '../../router/app_routes.dart';
 import '../../theme/theme.dart';
 import '../../widgets/horizental_cast.dart';
+import '../../widgets/not_ready.dart';
+import '../genres/genre_section.dart';
 import 'button_row.dart';
 import 'detail_image.dart';
 import 'genre_row.dart';
 import 'movie_overview.dart';
-import 'trailer.dart';
-
 
 @RoutePage(name: 'MovieDetailRoute')
 class MovieDetail extends ConsumerStatefulWidget {
@@ -25,12 +29,32 @@ class MovieDetail extends ConsumerStatefulWidget {
 
 class _MovieDetailState extends ConsumerState<MovieDetail> {
   final favoriteNotifier = ValueNotifier<bool>(false);
+  late MovieViewModel movieViewModel;
+  List<GenreState> genreStates = [];
+  late Movie currentMovie;
 
   @override
   Widget build(BuildContext context) {
-    final genres = ref.read(genresProvider);
-    final movies = ref.read(movieImagesProvider);
+    final movieViewModelAsync = ref.watch(movieViewModelProvider);
+    return movieViewModelAsync.when(
+      error: (e, st) => Text(e.toString()),
+      loading: () => const NotReady(),
+      data: (viewModel) {
+        movieViewModel = viewModel;
+        currentMovie = movieViewModel.findMovieById(widget.movieId);
+        buildGenreState();
+        return buildScreen();
+      },
+    );
+  }
 
+  void buildGenreState() {
+    for (final genre in movieViewModel.movieGenres) {
+      genreStates.add(GenreState(genre: genre, isSelected: false));
+    }
+  }
+
+  Widget buildScreen() {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -54,8 +78,8 @@ class _MovieDetailState extends ConsumerState<MovieDetail> {
                 child: CustomScrollView(slivers: [
                   SliverList(
                     delegate: SliverChildListDelegate([
-                      Stack(children: [DetailImage(movieUrl: movies[widget.movieId])]),
-                      GenreRow(genres: genres),
+                      Stack(children: [DetailImage(movieUrl: currentMovie.image)]),
+                      GenreRow(genres: genreStates),
                       const MovieOverview(
                           details:
                           'Follow the mythic journey of Paul Atreides as he unites with Chani and the Fremen while on a path of revenge against the conspirators who destroyed his family. Facing a choice between the love of his life and the fate of the known universe, Paul endeavors to prevent a terrible future only he can foresee.'),
@@ -82,7 +106,9 @@ class _MovieDetailState extends ConsumerState<MovieDetail> {
                       ),
                       Trailer(
                         movieVideos: const ['https://img.youtube.com/vi/U2Qp5pL3ovA/hqdefault.jpg'],
-                        onVideoTap: (video) {context.router.push(VideoPageRoute(movieVideoUrl: 'U2Qp5pL3ovA'));
+                        onVideoTap: (video) {
+                          context.router
+                              .push(VideoPageRoute(movieVideoUrl: 'U2Qp5pL3ovA',));
                         },
                       ),
 

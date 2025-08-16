@@ -1,13 +1,17 @@
 
 
 import 'package:auto_route/auto_route.dart';
-import 'package:br_movies/ui/home/genres/sort_picker.dart';
+import 'package:br_movies/ui/screens/genres/sort_picker.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../data/models/movie.dart';
 import '../../../providers.dart';
+import '../../movie_viewmodel.dart';
 import '../../router/app_routes.dart';
 import '../../theme/theme.dart';
+import '../../widgets/not_ready.dart';
 import '../../widgets/sliver_divider.dart';
 import '../../widgets/vert_movie_list.dart';
 import 'genre_search_row.dart';
@@ -22,38 +26,35 @@ class GenreScreen extends ConsumerStatefulWidget {
 }
 
 class _GenreScreenState extends ConsumerState<GenreScreen> {
-  List<GenreState> genres = [];
-  final expandedNotifier = ValueNotifier<bool>(false);
+    List<GenreState> genres = [];
+    final expandedNotifier = ValueNotifier<bool>(false);
+    late MovieViewModel movieViewModel;
+    List<GenreState> genreStates = [];
+    List<Movie> currentMovieList = [];
 
-  @override
-  void initState() {
-    super.initState();
-    genres = [
-      GenreState(genre: 'Action', isSelected: false),
-      GenreState(genre: 'Adventure', isSelected: false),
-      GenreState(genre: 'Crime', isSelected: false),
-      GenreState(genre: 'Mystery', isSelected: false),
-      GenreState(genre: 'War', isSelected: false),
-      GenreState(genre: 'Comedy', isSelected: false),
-      GenreState(genre: 'Romance', isSelected: false),
-      GenreState(genre: 'History', isSelected: false),
-      GenreState(genre: 'Music', isSelected: false),
-      GenreState(genre: 'Drama', isSelected: false),
-      GenreState(genre: 'Thriller', isSelected: false),
-      GenreState(genre: 'Family', isSelected: false),
-      GenreState(genre: 'Horror', isSelected: false),
-      GenreState(genre: 'Western', isSelected: false),
-      GenreState(genre: 'Science Fiction', isSelected: false),
-      GenreState(genre: 'Animation', isSelected: false),
-      GenreState(genre: 'Documentation', isSelected: false),
-      GenreState(genre: 'TV Movie', isSelected: false),
-      GenreState(genre: 'Fantasy', isSelected: false),
-    ];
+
+  void buildGenreState() {
+    genreStates.clear();
+    for (final genre in movieViewModel.movieGenres) {
+      genreStates.add(GenreState(genre: genre, isSelected: false));
+    }
   }
-
   @override
   Widget build(BuildContext context) {
-    final images = ref.read(movieImagesProvider);
+    final movieViewModelAsync =
+    ref.watch(movieViewModelProvider);
+    return movieViewModelAsync.when(
+      error: (e, st) => Text(e.toString()),
+      loading: () => const NotReady(),
+      data: (viewModel) {
+        movieViewModel = viewModel;
+        buildGenreState();
+        return buildScreen();
+      },
+    );
+  }
+
+  Widget buildScreen() {
     return SafeArea(
       child: Container(
         color: screenBackground,
@@ -94,7 +95,7 @@ class _GenreScreenState extends ConsumerState<GenreScreen> {
                   const SliverDivider(),
                   SortPicker(useSliver: true, onSortSelected: (sorting) {}),
                   VerticalMovieList(
-                    movies: images,
+                    movies: currentMovieList ,
                     onMovieTap: (movieId) {context.router.push(MovieDetailRoute(movieId: movieId));},
                   ),
                 ],
