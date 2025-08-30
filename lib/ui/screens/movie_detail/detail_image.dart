@@ -2,19 +2,20 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../data/models/movie_details.dart';
 import '../../../providers.dart';
 import '../../../utils/utils.dart';
 
 class DetailImage extends ConsumerStatefulWidget {
-  final String movieUrl;
-  const DetailImage( {required this.movieUrl,super.key});
+  final MovieDetails details;
+  const DetailImage( {required this.details,super.key});
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _DetailImageState();
   }
 
 class _DetailImageState extends ConsumerState<DetailImage> with SingleTickerProviderStateMixin {
   late final AnimationController _animationController = AnimationController(
-      duration: const Duration(seconds: 2),
+      duration: const Duration(milliseconds: 100),
       vsync: this );
   @override
   void initState() {
@@ -32,6 +33,7 @@ class _DetailImageState extends ConsumerState<DetailImage> with SingleTickerProv
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final heroTag = ref.watch(heroTagProvider);
+    var baseUrl= 'http://image.tmdb.org/t/p/w780';
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       child: SizedBox(height: 200,
@@ -44,7 +46,7 @@ class _DetailImageState extends ConsumerState<DetailImage> with SingleTickerProv
                 child: Hero(
                   tag: heroTag,
                   child: CachedNetworkImage(
-                    imageUrl: widget.movieUrl
+                    imageUrl: baseUrl+widget.details.backdropPath
                     ,
                     width: screenWidth,
                     fit: BoxFit.fitWidth,
@@ -67,7 +69,7 @@ class _DetailImageState extends ConsumerState<DetailImage> with SingleTickerProv
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Dune',
+                      widget.details.title,
                       style:
                       Theme
                           .of(context)
@@ -76,7 +78,7 @@ class _DetailImageState extends ConsumerState<DetailImage> with SingleTickerProv
                     ),
                     addVerticalSpace(4),
                     Text(
-                      '2024',
+                      yearFormat.format(widget.details.releaseDate),
                       style:
                       Theme
                           .of(context)

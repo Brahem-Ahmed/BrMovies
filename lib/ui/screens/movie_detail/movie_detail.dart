@@ -1,8 +1,10 @@
 
 import 'package:auto_route/auto_route.dart';
+import 'package:br_movies/data/models/movie_details.dart';
 import 'package:br_movies/ui/screens/movie_detail/trailer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lumberdash/lumberdash.dart';
 
 import '../../../data/models/movie.dart';
 import '../../../providers.dart';
@@ -30,8 +32,7 @@ class MovieDetail extends ConsumerStatefulWidget {
 class _MovieDetailState extends ConsumerState<MovieDetail> {
   final favoriteNotifier = ValueNotifier<bool>(false);
   late MovieViewModel movieViewModel;
-  List<GenreState> genreStates = [];
-  late Movie currentMovie;
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,87 +42,95 @@ class _MovieDetailState extends ConsumerState<MovieDetail> {
       loading: () => const NotReady(),
       data: (viewModel) {
         movieViewModel = viewModel;
-        currentMovie = movieViewModel.findMovieById(widget.movieId);
-        buildGenreState();
+      //  currentMovie = movieViewModel.findMovieById(widget.movieId);
         return buildScreen();
       },
     );
   }
 
-  void buildGenreState() {
-    for (final genre in movieViewModel.movieGenres) {
-      genreStates.add(GenreState(genre: genre, isSelected: false));
-    }
-  }
 
   Widget buildScreen() {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: screenBackground,
-          leading: BackButton(
-            color: Colors.white,
-            onPressed: () {
-              context.router.maybePopTop();
-            },
-          ),
-          centerTitle: false,
-          title:
-          Text('Back', style: Theme.of(context).textTheme.headlineMedium),
-        ),
-        body: Container(
-          color: screenBackground,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(
-                child: CustomScrollView(slivers: [
-                  SliverList(
-                    delegate: SliverChildListDelegate([
-                      Stack(children: [DetailImage(movieUrl: currentMovie.image)]),
-                      GenreRow(genres: genreStates),
-                      const MovieOverview(
-                          details:
-                          'Follow the mythic journey of Paul Atreides as he unites with Chani and the Fremen while on a path of revenge against the conspirators who destroyed his family. Facing a choice between the love of his life and the fate of the known universe, Paul endeavors to prevent a terrible future only he can foresee.'),
-                      ValueListenableBuilder<bool>(
-                        valueListenable: favoriteNotifier,
-                        builder:
-                            (BuildContext context, bool value, Widget? child) {
-                          return ButtonRow(
-                            favoriteSelected: favoriteNotifier.value,
-                            onFavoriteSelected: () async {
-                              if (favoriteNotifier.value) {
-                                favoriteNotifier.value = false;
-                              } else {
-                                favoriteNotifier.value = true;
-                              }
-                            },
-                          );
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 16, bottom: 8),
-                        child: Text('Trailers', style: Theme.of(context).textTheme.headlineLarge),
-                      ),
-                      Trailer(
-                        movieVideos: const ['https://img.youtube.com/vi/U2Qp5pL3ovA/hqdefault.jpg'],
-                        onVideoTap: (video) {
-                          context.router
-                              .push(VideoPageRoute(movieVideoUrl: 'U2Qp5pL3ovA',));
-                        },
-                      ),
+    return FutureBuilder(future: loadData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const NotReady();
+          }
+          if (snapshot.hasError) {
+            logMessage('Error: ${snapshot.error.toString()}');
+            return Text(snapshot.error.toString());
+          }
+          final movieDetails = snapshot.data as MovieDetails?;
+          if (movieDetails == null) {
+            return const NotReady();
+          }
 
-                    ]
-                    ),
-                  ),
-                  const HorizontalCast(castList: ['', '']),
-                ]),
-              )
-            ],
-          ),
-        ),
-      ),
+          return SafeArea(
+            child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: screenBackground,
+                leading: BackButton(
+                  color: Colors.white,
+                  onPressed: () {
+                    context.router.maybePopTop();
+                  },
+                ),
+                centerTitle: false,
+                title:
+                Text('Back', style: Theme
+                    .of(context)
+                    .textTheme
+                    .headlineMedium),
+              ),
+              body: Container(
+                color: screenBackground,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      child: CustomScrollView(slivers: [
+                        SliverList(
+                          delegate: SliverChildListDelegate([
+                            Stack(children: [
+                              DetailImage(details: movieDetails,)
+                            ]),
+                            GenreRow(genres: movieDetails.genres),
+                             MovieOverview(details: movieDetails,),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 16, bottom: 8),
+                              child: Text('Trailers', style: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .headlineLarge),
+                            ),
+                            Trailer(
+                              movieVideos: const [
+                                'https://img.youtube.com/vi/U2Qp5pL3ovA/hqdefault.jpg'
+                              ],
+                              onVideoTap: (video) {
+                                context.router
+                                    .push(
+                                    VideoPageRoute(
+                                      movieVideoUrl: 'U2Qp5pL3ovA',));
+                              },
+                            ),
+
+                          ]
+                          ),
+                        ),
+                        const HorizontalCast(castList: ['', '']),
+                      ]),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
     );
   }
+
+ Future loadData() async {
+    return movieViewModel.getMovieDetails(widget.movieId);
+ }
 }

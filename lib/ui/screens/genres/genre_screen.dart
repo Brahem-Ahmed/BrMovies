@@ -1,8 +1,5 @@
-
-
 import 'package:auto_route/auto_route.dart';
 import 'package:br_movies/ui/screens/genres/sort_picker.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,8 +13,9 @@ import '../../widgets/sliver_divider.dart';
 import '../../widgets/vert_movie_list.dart';
 import 'genre_search_row.dart';
 import 'genre_section.dart';
-@RoutePage(name: 'GenreRoute')
 
+
+@RoutePage(name: 'GenreRoute')
 class GenreScreen extends ConsumerStatefulWidget {
   const GenreScreen({super.key});
 
@@ -26,23 +24,14 @@ class GenreScreen extends ConsumerStatefulWidget {
 }
 
 class _GenreScreenState extends ConsumerState<GenreScreen> {
-    List<GenreState> genres = [];
-    final expandedNotifier = ValueNotifier<bool>(false);
-    late MovieViewModel movieViewModel;
-    List<GenreState> genreStates = [];
-    List<Movie> currentMovieList = [];
+  final expandedNotifier = ValueNotifier<bool>(false);
+  late MovieViewModel movieViewModel;
+  List<GenreState> genreStates = [];
+  List<Movie> currentMovieList = [];
 
-
-  void buildGenreState() {
-    genreStates.clear();
-    for (final genre in movieViewModel.movieGenres) {
-      genreStates.add(GenreState(genre: genre, isSelected: false));
-    }
-  }
   @override
   Widget build(BuildContext context) {
-    final movieViewModelAsync =
-    ref.watch(movieViewModelProvider);
+    final movieViewModelAsync = ref.watch(movieViewModelProvider);
     return movieViewModelAsync.when(
       error: (e, st) => Text(e.toString()),
       loading: () => const NotReady(),
@@ -53,6 +42,14 @@ class _GenreScreenState extends ConsumerState<GenreScreen> {
       },
     );
   }
+
+  void buildGenreState() {
+    genreStates.clear();
+    for (final genre in movieViewModel.movieGenres!) {
+      genreStates.add(GenreState(genre: genre, isSelected: false));
+    }
+  }
+
 
   Widget buildScreen() {
     return SafeArea(
@@ -84,7 +81,7 @@ class _GenreScreenState extends ConsumerState<GenreScreen> {
                       builder:
                           (BuildContext context, bool value, Widget? child) {
                         return GenreSection(
-                          genreStates: genres,
+                          genreStates: genreStates,
                           isExpanded: value,
                           onGenresExpanded: (expanded) {
                             expandedNotifier.value = expanded;
@@ -95,8 +92,10 @@ class _GenreScreenState extends ConsumerState<GenreScreen> {
                   const SliverDivider(),
                   SortPicker(useSliver: true, onSortSelected: (sorting) {}),
                   VerticalMovieList(
-                    movies: currentMovieList ,
-                    onMovieTap: (movieId) {context.router.push(MovieDetailRoute(movieId: movieId));},
+                    movies: currentMovieList,
+                    onMovieTap: (movieId) {
+                      context.router.push(MovieDetailRoute(movieId: movieId));
+                    },
                   ),
                 ],
               ),

@@ -15,12 +15,13 @@ enum MovieType {
 }
 
 class MovieWidget extends ConsumerStatefulWidget {
-  final Movie movie;
+  final int movieId;
+  final String movieUrl;
   final OnMovieTap onMovieTap;
   final MovieType movieType;
-
   const MovieWidget(
-      { required this.movie,
+      {required this.movieId,
+        required this.movieUrl,
         required this.onMovieTap,
         required this.movieType,
         super.key});
@@ -41,7 +42,7 @@ class _MovieWidgetState extends ConsumerState<MovieWidget>
   @override
   void initState() {
     super.initState();
-    uniqueHeroTag = widget.movie.image + widget.movieType.name;
+    uniqueHeroTag = widget.movieUrl + widget.movieType.name;
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _controller.reset();
@@ -68,7 +69,7 @@ class _MovieWidgetState extends ConsumerState<MovieWidget>
           child: Hero(
             tag: uniqueHeroTag,
             child: CachedNetworkImage(
-              imageUrl: widget.movie.image,
+              imageUrl: widget.movieUrl,
               alignment: Alignment.topCenter,
               fit: BoxFit.fitHeight,
               height: 100,
@@ -80,7 +81,7 @@ class _MovieWidgetState extends ConsumerState<MovieWidget>
                 onComplete: (controller) {
                   if (animateImage) {
                     animateImage = false;
-                    widget.onMovieTap(widget.movie.movieId);
+                    widget.onMovieTap(widget.movieId);
                   }
                 })
                 .scaleXY(begin: 1.0, end: 1.1, duration: 600.ms)

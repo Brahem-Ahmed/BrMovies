@@ -1,9 +1,10 @@
+import 'package:br_movies/data/models/movie_details.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../theme/theme.dart';
 
 class MovieOverview extends StatelessWidget {
-  final String details;
+  final MovieDetails details;
 
   const MovieOverview({super.key, required this.details});
 
@@ -12,7 +13,7 @@ class MovieOverview extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
       child: Text(
-        details,
+        details.overview,
         style: body1Regular,
       ),
     );

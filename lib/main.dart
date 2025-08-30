@@ -1,10 +1,16 @@
 
 import 'package:br_movies/providers.dart';
 import 'package:br_movies/ui/theme/theme.dart';
+import 'package:colorize_lumberdash/colorize_lumberdash.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lumberdash/lumberdash.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  putLumberdashToWork(withClients: [ColorizeLumberdash(),]);
+  await dotenv.load(fileName: ".env");
   runApp(ProviderScope(child: const MainApp()));
 }
 

@@ -1,12 +1,13 @@
 
 
+import 'package:br_movies/data/models/genre.dart';
 import 'package:flutter/material.dart';
 
 import '../../theme/theme.dart';
 import '../genres/genre_section.dart';
 
 class GenreRow extends StatefulWidget {
-  final List<GenreState> genres;
+  final List<Genre> genres;
 
   const GenreRow({super.key, required this.genres});
 
@@ -62,7 +63,7 @@ class _GenreRowState extends State<GenreRow>
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                genre.genre,
+                genre.name,
                 style: Theme.of(context)
                     .textTheme
                     .bodyLarge

@@ -1,16 +1,16 @@
 
+import 'package:br_movies/network/movie_api_service.dart';
 import 'package:br_movies/ui/movie_viewmodel.dart';
 import 'package:br_movies/ui/router/app_routes.dart';
-import 'package:br_movies/ui/screens/genres/genre_section.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import
-'package:riverpod_annotation/riverpod_annotation.dart';
+import'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'providers.g.dart';
-
+@Riverpod(keepAlive: true)
+MovieAPIService movieAPIService(Ref ref) => MovieAPIService();
 @Riverpod(keepAlive: true)
 Future<MovieViewModel> movieViewModel(Ref ref) async {
-  final model = MovieViewModel();
+  final model = MovieViewModel(movieAPIService: ref.read(movieAPIServiceProvider));
   await model.setup();
  return model;}
 

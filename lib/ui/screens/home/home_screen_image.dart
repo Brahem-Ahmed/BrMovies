@@ -32,18 +32,19 @@ class HomeScreenImage extends ConsumerWidget {
         itemCount: movieViewModel.nowPlayingMovies.length,
         itemBuilder: (BuildContext context, int index) {
           final currentMovie = movieViewModel.nowPlayingMovies[index];
-          String uniqueHeroTag = '${currentMovie.image}swiper';
+          String uniqueHeroTag = '${currentMovie.posterPath}swiper';
+          String imageUrl = 'http://image.tmdb.org/t/p/w780${currentMovie.posterPath}';
 
           // 5
       return GestureDetector(
         onTap: () {
           ref.read(heroTagProvider.notifier).state = uniqueHeroTag;
-          onMovieTap(index);
+          onMovieTap(currentMovie.id);
         },
         child: Hero(
           tag: uniqueHeroTag,
           child: CachedNetworkImage(
-            imageUrl: currentMovie.image,
+            imageUrl: imageUrl,
             alignment: Alignment.topCenter,
             fit: BoxFit.fitHeight,
             height: 232,

@@ -6,7 +6,24 @@ part of 'providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$movieViewModelHash() => r'0d3337a89171d3592e490518cf9a99861276ac7b';
+String _$movieAPIServiceHash() => r'1fcc456233061aa0ae60254828e4d2e61c6ba3cf';
+
+/// See also [movieAPIService].
+@ProviderFor(movieAPIService)
+final movieAPIServiceProvider = Provider<MovieAPIService>.internal(
+  movieAPIService,
+  name: r'movieAPIServiceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$movieAPIServiceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef MovieAPIServiceRef = ProviderRef<MovieAPIService>;
+String _$movieViewModelHash() => r'391332b31ebd14a673e656f93321ac7c0c2dfdc2';
 
 /// See also [movieViewModel].
 @ProviderFor(movieViewModel)
